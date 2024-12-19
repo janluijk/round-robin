@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 #[derive(Debug, PartialEq, Clone, Copy)]
 struct Match {
     left: i32,
@@ -13,13 +11,30 @@ impl Match {
 }
 
 struct Matchup {
-    data: [[Match; 6]; 12],
+    data: [[Match; 6]; 6],
 }
 
 impl Matchup {
     fn new(default_value: Match) -> Self {
         Self {
-            data: [[default_value; 6]; 12],
+            data: [[default_value; 6]; 6],
+        }
+    }
+    fn reset(&mut self) {
+        for row in &mut self.data {
+            for entry in row.iter_mut() {
+                entry.left = 0;
+                entry.right = 0;
+            }
+        }
+    }
+
+    fn print(&self) {
+        for row in self.data.iter() {
+            for entry in row.iter() {
+                print!("({}) ({}), ", entry.left, entry.right)
+            }
+            println!();
         }
     }
 
@@ -95,105 +110,74 @@ impl Matchup {
     }
 
     fn find_solution(&mut self) -> bool {
-        self.solve(0, 0)
+        let mut pairs = [false; 144];
+        self.solve(0, 0, &mut pairs);
+        self.print();
+        self.reset();
+        pairs[Self::pair_index(1, 2)] = false;
+        pairs[Self::pair_index(3, 4)] = false;
+        pairs[Self::pair_index(5, 6)] = false;
+        pairs[Self::pair_index(7, 8)] = false;
+        pairs[Self::pair_index(9, 10)] = false;
+        pairs[Self::pair_index(11, 12)] = false;
+        self.print();
+        self.solve(0, 0, &mut pairs)
     }
 
-    fn solve(&mut self, row: usize, col: usize) -> bool {
+    fn pair_index(left: i32, right: i32) -> usize {
+        let (min, max) = (left.min(right), left.max(right));
+        (min - 1) as usize * 12 + (max - min - 1) as usize
+    }
+
+    fn solve(&mut self, row: usize, col: usize, used_pairs: &mut [bool; 144]) -> bool {
         if col == 6 {
-            return if row == 12 {
+            return if row == 5 {
                 true
             } else {
-                self.solve(row + 1, 0)
+                self.solve(row + 1, 0, used_pairs)
             };
         }
 
-        let mut available = [true; 13];
-        let mut used_pairs = HashSet::new();
+        let mut available: u32 = 0b1111111111110;
 
-        if row < 7 {
-            for r in 0..6 {
-                let left = self.data[r][col].left;
-                let right = self.data[r][col].right;
-
-                if left != 0 {
-                    available[left as usize] = false;
-                }
-
-                if right != 0 {
-                    available[right as usize] = false;
-                }
-
-                if left != 0 && right != 0 {
-                    used_pairs.insert((left.min(right), left.max(right)));
-                }
-            }
-        } else {
-            for r in 6..12 {
-                let left = self.data[r][col].left;
-                let right = self.data[r][col].right;
-
-                if left != 0 {
-                    available[left as usize] = false;
-                }
-
-                if right != 0 {
-                    available[right as usize] = false;
-                }
-
-                if left != 0 && right != 0 {
-                    used_pairs.insert((left.min(right), left.max(right)));
-                }
-            }
-        }
-
-        for c in 0..6 {
-            let left = self.data[row][c].left;
-            let right = self.data[row][c].right;
-
-            if left != 0 {
-                available[left as usize] = false;
-            }
-
-            if right != 0 {
-                available[right as usize] = false;
-            }
-        }
-
-        for r in 0..12 {
+        for r in 0..6 {
             for c in 0..6 {
-                let left = self.data[r][c].left;
-                let right = self.data[r][c].right;
+                let entry = self.data[r][c];
 
-                if left != 0 && right != 0 {
-                    used_pairs.insert((left, right));
+                if entry.left == 0 || entry.right == 0 {
+                    break;
                 }
+
+                available &= !(1 << entry.left);
+                available &= !(1 << entry.right);
             }
         }
 
         for left_value in 1..=12 {
-            if available[left_value as usize] {
-                available[left_value as usize] = false;
+            if available & (1 << left_value) {
+                available &= !(1 << left_value); // Mark left_value as unavailable
 
-                // keep copy of available
                 let original_available = available;
 
                 for right_value in 1..=12 {
-                    if available[right_value as usize] {
-                        available[right_value as usize] = false;
+                    if available & (1 << right_value) {
+                        available &= !(1 << right_value); // Mark right_value as unavailable
 
-                        let pair = (left_value.min(right_value), left_value.max(right_value));
+                        let pair_index = Self::pair_index(left_value, right_value);
 
-                        if used_pairs.contains(&pair) {
+                        if used_pairs[pair_index] {
                             continue;
                         }
 
                         self.data[row][col] = Match::new(left_value, right_value);
+                        used_pairs[pair_index] = true;
 
-                        if self.solve(row, col + 1) {
+                        if self.solve(row, col + 1, used_pairs) {
                             return true;
                         }
 
                         self.data[row][col] = Match::new(0, 0);
+                        used_pairs[pair_index] = false;
                     }
                 }
 
