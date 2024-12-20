@@ -27,7 +27,7 @@ use crate::matchup_validator::MatchupValidator;
 //}
 
 fn main() {
-    let size = 4;
+    let size = 8;
     let default_match = Match::new(0, 0);
     let mut matchup = Matchup::new(size, default_match);
 
@@ -39,7 +39,9 @@ fn main() {
 
     {
         let validator = MatchupValidator::new(&matchup);
-        validator.validate_matchup();
+        if validator.validate_matchup() {
+            println!("FOUND A MATCHUP");
+        }
     }
     matchup.print();
     matchup.clean();

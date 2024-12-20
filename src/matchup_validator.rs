@@ -13,61 +13,47 @@ impl<'a> MatchupValidator<'a> {
         let rows = self.matchup.rows;
         let cols = self.matchup.cols;
 
+        let mut matches = vec![true; rows * cols];
+
         for row in 0..rows {
             for col in 0..cols {
-                let mut available = self.get_available_bitmask(rows);
-
-                if !self.is_valid_for_cell(row, col, &mut available) {
+                if !self.is_valid_for_cell(row, col, &mut matches) {
                     return false;
                 }
             }
         }
-        true
+
+        self.all_matches_used(&matches)
     }
 
-    fn get_available_bitmask(&self, rows: usize) -> u32 {
-        (1u32 << (rows + 1)) - 1
-    }
+    fn is_valid_for_cell(&self, row: usize, col: usize, matches: &mut [bool]) -> bool {
+        let entry = self.matchup.data[row][col];
 
-    fn is_valid_for_cell(&self, row: usize, col: usize, available: &mut u32) -> bool {
-        let rows = self.matchup.rows;
-        let cols = self.matchup.cols;
-
-        let mut range = 0..cols;
-        let second_half = row > cols;
-
-        if second_half {
-            range = cols..rows
-        }
-
-        for c in 0..cols {
-            let entry = self.matchup.data[row][c];
-
-            if entry.left != 0 || entry.right != 0 {
-                self.set_value(entry.left, available);
-                self.set_value(entry.right, available);
-            }
-        }
-
-        for r in range {
-            let entry = self.matchup.data[r][col];
-
-            if entry.left != 0 || entry.right != 0 {
-                self.set_value(entry.left, available);
-                self.set_value(entry.right, available);
-            }
-        }
-
-        let not_all_numbers_used = *available != 0;
-        if not_all_numbers_used {
+        let matchnr = self.data_to_match(entry.left, entry.right);
+        if !matches[matchnr] {
             return false;
         }
+
+        matches[matchnr] = false;
         true
     }
 
-    fn set_value(&self, value: usize, available: &mut u32) {
-        if value != 0 {
-            *available &= !(1 << value);
+    fn data_to_match(&self, left: usize, right: usize) -> usize {
+        let start = self.matchup.rows;
+
+        let count = left - 1;
+        let mut sum = 0;
+
+        for i in 0..count {
+            sum += start - i;
         }
+
+        let diff = right - left;
+        sum += diff - 1;
+        sum
+    }
+
+    fn all_matches_used(&self, matches: &[bool]) -> bool {
+        matches.iter().all(|&value| !value)
     }
 }

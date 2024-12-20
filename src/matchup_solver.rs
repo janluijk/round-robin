@@ -8,18 +8,12 @@ enum Method {
 pub struct MatchupSolver<'a> {
     matchup: &'a mut Matchup,
     method: Method,
-    size: usize,
 }
 
 impl<'a> MatchupSolver<'a> {
     pub fn new(matchup: &'a mut Matchup) -> Self {
         let method = Method::PerCell;
-        let size = matchup.cols;
-        MatchupSolver {
-            matchup,
-            method,
-            size,
-        }
+        MatchupSolver { matchup, method }
     }
 
     pub fn solve(&mut self) -> bool {
@@ -117,8 +111,9 @@ impl<'a> MatchupSolver<'a> {
     }
 
     fn solve_cell(&mut self, matches: &mut [bool], cellnr: usize, start_match: usize) -> i32 {
-        let curr_row = cellnr / self.size;
-        let curr_col = cellnr % self.size;
+        let curr_row = cellnr / self.matchup.cols;
+        let curr_col = cellnr % self.matchup.cols; // probably optimised by compiler
+
         let available = self.get_available(curr_row, curr_col);
         let new_match = self.get_first_match(matches, available, start_match);
 
@@ -174,7 +169,7 @@ impl<'a> MatchupSolver<'a> {
         let second_half = curr_row >= self.matchup.cols;
 
         if second_half {
-            range = self.size..curr_row;
+            range = self.matchup.cols..curr_row;
         }
 
         for r in range {
