@@ -27,7 +27,7 @@ use crate::matchup_validator::MatchupValidator;
 //}
 
 fn main() {
-    let size = 8;
+    let size = 4;
     let default_match = Match::new(0, 0);
     let mut matchup = Matchup::new(size, default_match);
 
