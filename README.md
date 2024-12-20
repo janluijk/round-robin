@@ -1,8 +1,8 @@
 # Round-Robin Tournament Generator
 ## Description
 This project implements an algorithm to generate a round-robin tournament that satsfies the following criteria
-- *n* teams participate in the tournament.
-- There are *n* games in total.
+- `n` teams participate in the tournament.
+- There are `n` games in total.
 - Each team plays each game twice
 - Each team faces every other opponent exactly once
 
