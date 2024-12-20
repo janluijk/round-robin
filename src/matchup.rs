@@ -31,13 +31,12 @@ impl Matchup {
     pub fn print(&self) {
         for row in self.data.iter() {
             for entry in row.iter() {
-                print!("({}) ({}), ", entry.left, entry.right);
+                print!("[{:2} - {:2}] ", entry.left, entry.right);
             }
             println!();
         }
         println!("-----------");
     }
-
     pub fn clean(&mut self) {
         for row in &mut self.data {
             for entry in row {
