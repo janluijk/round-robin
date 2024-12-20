@@ -7,7 +7,7 @@ This project implements an algorithm to generate a round-robin tournament that s
 - Each team faces every other opponent exactly once
 
 The algorithm ensures that the constraints are met for different values of *n*, starting at `n = 4` though some values are more challenging to solve than others.
-For example, solutions have been found for `n = 5` and `n = 6` in only a couple of seconds, `n = 4` remains undiscovered.
+For example, solutions have been found for `n = 5`, `n = 6`, `n = 7`, and `n = 4` remains undiscovered.
 
 
 ## Running the project
@@ -54,4 +54,21 @@ cargo run
 [ 3 - 10] [ 5 -  9] [ 2 - 12] [ 4 - 11] [ 1 -  8] [ 6 -  7] 
 [ 5 -  7] [ 4 - 12] [ 1 - 10] [ 6 -  8] [ 3 -  9] [ 2 - 11] 
 [ 6 - 12] [ 1 - 11] [ 4 -  9] [ 3 -  7] [ 2 - 10] [ 5 -  8]
+```
+
+`n = 7`
+```
+[ 1 -  2] [ 3 -  4] [ 5 -  6] [ 7 -  8] [ 9 - 10] [11 - 12] [13 - 14] 
+[ 3 -  5] [ 1 -  6] [ 2 -  4] [ 9 - 11] [ 7 - 13] [ 8 - 14] [10 - 12] 
+[ 4 -  6] [ 2 -  5] [ 1 -  7] [ 3 - 10] [12 - 14] [ 9 - 13] [ 8 - 11] 
+[ 7 -  9] [ 8 - 12] [ 3 - 14] [ 1 - 13] [ 2 - 11] [ 6 - 10] [ 4 -  5] 
+[ 8 - 10] [11 - 13] [ 9 - 12] [ 4 - 14] [ 1 -  5] [ 2 -  3] [ 6 -  7] 
+[11 - 14] [ 7 - 10] [ 8 - 13] [ 5 - 12] [ 3 -  6] [ 1 -  4] [ 2 -  9] 
+[12 - 13] [ 9 - 14] [10 - 11] [ 2 -  6] [ 4 -  8] [ 5 -  7] [ 1 -  3] 
+[ 1 -  8] [ 2 -  7] [ 3 -  9] [ 4 - 11] [ 5 - 13] [ 6 - 12] [10 - 14] 
+[ 2 - 10] [ 1 -  9] [ 4 - 12] [ 3 - 13] [ 7 - 11] [ 5 - 14] [ 6 -  8] 
+[ 3 - 11] [ 4 - 13] [ 5 -  8] [ 7 - 14] [ 6 -  9] [ 1 - 10] [ 2 - 12] 
+[ 5 -  9] [ 6 - 14] [10 - 13] [ 2 -  8] [ 3 - 12] [ 4 -  7] [ 1 - 11] 
+[ 6 - 13] [ 5 - 11] [ 2 - 14] [ 1 - 12] [ 4 - 10] [ 8 -  9] [ 3 -  7] 
+[ 7 - 12] [ 3 -  8] [ 6 - 11] [ 5 - 10] [ 1 - 14] [ 2 - 13] [ 4 -  9] 
 ```
