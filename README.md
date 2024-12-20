@@ -7,7 +7,7 @@ This project implements an algorithm to generate a round-robin tournament that s
 - Each team faces every other opponent exactly once
 
 The algorithm ensures that the constraints are met for different values of `n`, starting at `n = 4`.
-Solutions have been found for `n = 5`, `n = 6`, `n = 7`. After a proof by exhaustion, it turns out that there exists no solution for `n = 4`.
+Solutions have been found for `n = 5`, `n = 6`, `n = 7`. No solutions exist for `n = 4` (this has been proven by exhaustion).
 
 
 ## Running the project
