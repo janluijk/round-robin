@@ -65,7 +65,7 @@ impl<'a> MatchupValidator<'a> {
         true
     }
 
-    fn set_value(&self, value: i32, available: &mut u32) {
+    fn set_value(&self, value: usize, available: &mut u32) {
         if value != 0 {
             *available &= !(1 << value);
         }

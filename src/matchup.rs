@@ -1,11 +1,11 @@
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Match {
-    pub left: i32,
-    pub right: i32,
+    pub left: usize,
+    pub right: usize,
 }
 
 impl Match {
-    pub fn new(left: i32, right: i32) -> Self {
+    pub fn new(left: usize, right: usize) -> Self {
         Match { left, right }
     }
 }
@@ -37,8 +37,6 @@ impl Matchup {
         }
         println!("-----------");
     }
-
-    pub fn solve(&self) {}
 
     pub fn clean(&mut self) {
         for row in &mut self.data {
